@@ -20,12 +20,25 @@ INSTALAR AGORA
 <script>
 let deferredPrompt;
 
-// REGISTRA SERVICE WORKER
+// ✅ REGISTRO CORRETO DO SERVICE WORKER
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('service-worker.js');
+  navigator.serviceWorker.register('./service-worker.js')
+  .then(() => console.log("SW registrado"))
+  .catch(err => console.log("Erro SW:", err));
 }
 
-// Evento de instalação
+// ✅ DETECTA SE ESTÁ INSTALADO (ANDROID)
+function isStandalone() {
+  return window.matchMedia('(display-mode: standalone)').matches
+    || window.navigator.standalone === true; // iPhone
+}
+
+// ✅ SE JÁ ESTÁ INSTALADO → REDIRECIONA
+if (isStandalone()) {
+  window.location.replace("https://sites.google.com/view/e-3bpmtropa/início");
+}
+
+// ✅ CAPTURA EVENTO DE INSTALAÇÃO
 window.addEventListener('beforeinstallprompt', (e) => {
   e.preventDefault();
   deferredPrompt = e;
@@ -33,25 +46,19 @@ window.addEventListener('beforeinstallprompt', (e) => {
   document.getElementById("btnInstall").style.display = "block";
 });
 
-// Clique no botão instalar
+// ✅ BOTÃO INSTALAR
 document.getElementById("btnInstall").addEventListener("click", async () => {
   if (deferredPrompt) {
     deferredPrompt.prompt();
-    const { outcome } = await deferredPrompt.userChoice;
+    const choice = await deferredPrompt.userChoice;
 
-    if (outcome === 'accepted') {
-      // 🔥 REDIRECIONA SÓ DEPOIS DE INSTALAR
-      window.location.href = "https://sites.google.com/view/e-3bpmtropa/in%C3%ADcio";
+    if (choice.outcome === 'accepted') {
+      console.log("Instalado com sucesso");
     }
 
     deferredPrompt = null;
   }
 });
-
-// SE JÁ ESTIVER INSTALADO → abre direto
-if (window.matchMedia('(display-mode: standalone)').matches) {
-  window.location.href = "https://sites.google.com/view/e-3bpmtropa/in%C3%ADcio";
-}
 </script>
 
 </body>
