@@ -4,19 +4,44 @@
   <title>E-3BPM TROPA</title>
 
   <link rel="manifest" href="manifest.json">
-
   <meta name="theme-color" content="#000000">
 
   <script>
-    // REDIRECIONA AUTOMATICAMENTE PARA O SITE
-    window.location.href = "https://sites.google.com/view/e-3bpmtropa/início";
+    let deferredPrompt;
+
+    // Detecta se está rodando como APP
+    function isStandalone() {
+      return window.matchMedia('(display-mode: standalone)').matches;
+    }
+
+    // Se já estiver instalado → abre o site direto
+    if (isStandalone()) {
+      window.location.href = "https://sites.google.com/view/e-3bpmtropa/início";
+    }
+
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      document.getElementById("btnInstall").style.display = "block";
+    });
+
+    function instalar() {
+      if (deferredPrompt) {
+        deferredPrompt.prompt();
+      }
+    }
   </script>
 
 </head>
 
 <body style="background:black;color:white;text-align:center;margin-top:50px;">
 
-<h1>Abrindo sistema...</h1>
+<h1>E-3BPM TROPA</h1>
+<p>Portal oficial do batalhão</p>
+
+<button id="btnInstall" onclick="instalar()" style="display:none;padding:15px;font-size:18px;">
+INSTALAR AGORA
+</button>
 
 </body>
 </html>
