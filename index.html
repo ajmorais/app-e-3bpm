@@ -7,34 +7,16 @@
 
   <meta name="theme-color" content="#000000">
 
+  <script>
+    // REDIRECIONA AUTOMATICAMENTE PARA O SITE
+    window.location.href = "https://sites.google.com/view/e-3bpmtropa/início";
+  </script>
+
 </head>
 
 <body style="background:black;color:white;text-align:center;margin-top:50px;">
 
-<h1>E-3BPM TROPA</h1>
-
-<p>Portal oficial do batalhão</p>
-
-<button onclick="instalar()" style="padding:15px;font-size:18px;">
-INSTALAR AGORA
-</button>
-
-<script>
-let deferredPrompt;
-
-window.addEventListener('beforeinstallprompt', (e) => {
-  e.preventDefault();
-  deferredPrompt = e;
-});
-
-function instalar() {
-  if(deferredPrompt){
-    deferredPrompt.prompt();
-  } else {
-    alert("Use o menu do navegador para instalar");
-  }
-}
-</script>
+<h1>Abrindo sistema...</h1>
 
 </body>
 </html>
