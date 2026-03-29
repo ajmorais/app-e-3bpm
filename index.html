@@ -4,6 +4,7 @@
   <title>E-3BPM TROPA</title>
 
   <link rel="manifest" href="manifest.json">
+
   <meta name="theme-color" content="#000000">
 
 </head>
@@ -11,46 +12,27 @@
 <body style="background:black;color:white;text-align:center;margin-top:50px;">
 
 <h1>E-3BPM TROPA</h1>
+
 <p>Portal oficial do batalhão</p>
 
-<button id="btnInstall" style="display:none;padding:15px;font-size:18px;">
+<button onclick="instalar()" style="padding:15px;font-size:18px;">
 INSTALAR AGORA
 </button>
 
 <script>
 let deferredPrompt;
 
-// REGISTRA SERVICE WORKER
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('service-worker.js');
-}
-
-// Evento de instalação
 window.addEventListener('beforeinstallprompt', (e) => {
   e.preventDefault();
   deferredPrompt = e;
-
-  document.getElementById("btnInstall").style.display = "block";
 });
 
-// Clique no botão instalar
-document.getElementById("btnInstall").addEventListener("click", async () => {
-  if (deferredPrompt) {
+function instalar() {
+  if(deferredPrompt){
     deferredPrompt.prompt();
-    const { outcome } = await deferredPrompt.userChoice;
-
-    if (outcome === 'accepted') {
-      // 🔥 REDIRECIONA SÓ DEPOIS DE INSTALAR
-      window.location.href = "https://sites.google.com/view/e-3bpmtropa/início";
-    }
-
-    deferredPrompt = null;
+  } else {
+    alert("Use o menu do navegador para instalar");
   }
-});
-
-// SE JÁ ESTIVER INSTALADO → abre direto
-if (window.matchMedia('(display-mode: standalone)').matches) {
-  window.location.href = "https://sites.google.com/view/e-3bpmtropa/início";
 }
 </script>
 
