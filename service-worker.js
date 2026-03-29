@@ -1,7 +1,11 @@
-self.addEventListener('install', function(e) {
+self.addEventListener('install', event => {
   self.skipWaiting();
 });
 
-self.addEventListener('fetch', function(event) {
-  // apenas passa a requisição (necessário para PWA)
+self.addEventListener('activate', event => {
+  console.log('Service Worker ativo');
+});
+
+self.addEventListener('fetch', event => {
+  // necessário para tornar instalável
 });
