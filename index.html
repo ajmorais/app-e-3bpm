@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>E-3BPM</title>
+
+  <link rel="manifest" href="manifest.json">
+
+  <script>
+    let deferredPrompt;
+
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+
+      // força aparecer botão automático
+      document.getElementById("install").style.display = "block";
+    });
+
+    function instalar() {
+      deferredPrompt.prompt();
+    }
+  </script>
+</head>
+
+<body style="text-align:center; margin-top:50px; background:black; color:white;">
+  <h1>E-3BPM TROPA</h1>
+  <button id="install" onclick="instalar()" style="display:none; font-size:20px;">
+    INSTALAR AGORA
+  </button>
+</body>
+</html>
