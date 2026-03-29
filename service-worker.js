@@ -1,11 +1,13 @@
-self.addEventListener('install', event => {
+self.addEventListener('install', (e) => {
   self.skipWaiting();
 });
 
-self.addEventListener('activate', event => {
-  console.log('Service Worker ativo');
+self.addEventListener('activate', (e) => {
+  return self.clients.claim();
 });
 
-self.addEventListener('fetch', event => {
-  // necessário para tornar instalável
+// Evento fetch obrigatório para PWA
+self.addEventListener('fetch', (e) => {
+  // Apenas deixa a requisição passar, mas satisfaz o requisito do Chrome
+  e.respondWith(fetch(e.request));
 });
