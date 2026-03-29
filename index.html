@@ -2,12 +2,26 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>E-3BPM TROPA</title>
+    
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#000000">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="apple-touch-icon" href="icon-192.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="E-3BPM">
+
     <style>
-        body { background-color: black; color: white; text-align: center; margin-top: 50px; font-family: sans-serif; }
+        body { 
+            background-color: black; 
+            color: white; 
+            text-align: center; 
+            margin-top: 50px; 
+            font-family: sans-serif; 
+            padding: 20px;
+        }
         #btnInstall { 
             display: none; 
             padding: 15px 30px; 
@@ -17,46 +31,63 @@
             border: none; 
             border-radius: 8px; 
             cursor: pointer;
+            font-weight: bold;
+        }
+        #ios-notice {
+            display: none; 
+            background: #222; 
+            color: white; 
+            padding: 20px; 
+            position: fixed; 
+            bottom: 30px; 
+            left: 10px; 
+            right: 10px; 
+            border-radius: 15px; 
+            z-index: 9999; 
+            font-size: 16px;
+            border: 1px solid #444;
+            box-shadow: 0px 4px 15px rgba(0,0,0,0.5);
         }
     </style>
-<<link rel="apple-touch-icon" href="icon-192.png">
-<head>
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="E-3BPM">>
-    <body>
-<<div id="ios-notice" style="display: none; background: #333; color: white; padding: 15px; position: fixed; bottom: 20px; left: 10px; right: 10px; border-radius: 10px; z-index: 9999; font-size: 14px;">
-    Para instalar no seu iPhone: <br>
-    1. Toque no ícone <strong>Compartilhar</strong> <img src="https://img.icons8.com/ios/20/ffffff/upload.png" style="vertical-align: middle;"> abaixo.<br>
-    2. Role para baixo e toque em <strong>"Adicionar à Tela de Início"</strong>.
-</div>>
+</head>
+<body>
+
     <h1>E-3BPM TROPA</h1>
     <p>Portal oficial do batalhão</p>
     
     <button id="btnInstall">INSTALAR AGORA</button>
 
+    <div id="ios-notice">
+        <strong>Para instalar no seu iPhone:</strong><br><br>
+        1. Toque no ícone <strong>Compartilhar</strong> <img src="https://img.icons8.com/ios/20/ffffff/upload.png" style="vertical-align: middle;"> abaixo.<br>
+        2. Role para baixo e toque em <strong>"Adicionar à Tela de Início"</strong>.
+    </div>
+
     <script>
         // URL de destino final
-        const urlDestino = "https://sites.google.com/view/e-3bpmtropa/in%C3%ADcio?pli=1";
+        const urlDestino = "https://sites.google.com/view/e-3bpmtropa/inicio";
 
-        // 1. VERIFICAÇÃO DE INSTALAÇÃO: Se já estiver instalado, vai direto para o site
-        if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true) {
+        // 1. VERIFICAÇÃO DE INSTALAÇÃO: Se já estiver instalado (Android ou iOS), vai direto
+        const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+        
+        if (isStandalone) {
             window.location.href = urlDestino;
         }
 
         // 2. REGISTRO DO SERVICE WORKER
         if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('service-worker.js');
+            navigator.serviceWorker.register('service-worker.js')
+                .catch(err => console.log("Erro ao registrar SW:", err));
         }
 
-        // 3. LÓGICA DE INSTALAÇÃO
+        // 3. LÓGICA PARA ANDROID (Chrome)
         let deferredPrompt;
         const btnInstall = document.getElementById('btnInstall');
 
         window.addEventListener('beforeinstallprompt', (e) => {
             e.preventDefault();
             deferredPrompt = e;
-            btnInstall.style.display = 'block'; // Mostra o botão apenas se for instalável
+            btnInstall.style.display = 'inline-block';
         });
 
         btnInstall.addEventListener('click', async () => {
@@ -64,30 +95,26 @@
                 deferredPrompt.prompt();
                 const { outcome } = await deferredPrompt.userChoice;
                 if (outcome === 'accepted') {
-                    console.log('Usuário aceitou a instalação');
                     btnInstall.style.display = 'none';
                 }
                 deferredPrompt = null;
             }
         });
 
-        // Caso o usuário instale, redireciona após a conclusão
         window.addEventListener('appinstalled', () => {
             window.location.href = urlDestino;
         });
+
+        // 4. LÓGICA PARA IOS (iPhone)
+        const isIos = () => {
+            const userAgent = window.navigator.userAgent.toLowerCase();
+            return /iphone|ipad|ipod/.test(userAgent);
+        }
+
+        // Se for iOS e NÃO estiver instalado, mostra o aviso manual
+        if (isIos() && !isStandalone) {
+            document.getElementById('ios-notice').style.display = 'block';
+        }
     </script>
-    <// Detecta se é iOS
-const isIos = () => {
-  const userAgent = window.navigator.userAgent.toLowerCase();
-  return /iphone|ipad|ipod/.test(userAgent);
-}
-
-// Detecta se já está instalado (Modo Standalone)
-const isInStandaloneMode = () => ('standalone' in window.navigator) && (window.navigator.standalone);
-
-// Se for iOS e NÃO estiver instalado, mostra o aviso
-if (isIos() && !isInStandaloneMode()) {
-  document.getElementById('ios-notice').style.display = 'block';
-}>
 </body>
 </html>
