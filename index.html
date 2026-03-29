@@ -19,8 +19,16 @@
             cursor: pointer;
         }
     </style>
-</head>
-<body>
+<<link rel="apple-touch-icon" href="icon-192.png">
+
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="E-3BPM">>
+<<div id="ios-notice" style="display: none; background: #333; color: white; padding: 15px; position: fixed; bottom: 20px; left: 10px; right: 10px; border-radius: 10px; z-index: 9999; font-size: 14px;">
+    Para instalar no seu iPhone: <br>
+    1. Toque no ícone <strong>Compartilhar</strong> <img src="https://img.icons8.com/ios/20/ffffff/upload.png" style="vertical-align: middle;"> abaixo.<br>
+    2. Role para baixo e toque em <strong>"Adicionar à Tela de Início"</strong>.
+</div>>
     <h1>E-3BPM TROPA</h1>
     <p>Portal oficial do batalhão</p>
     
@@ -66,6 +74,18 @@
         window.addEventListener('appinstalled', () => {
             window.location.href = urlDestino;
         });
-    </script>
+    <// Detecta se é iOS
+const isIos = () => {
+  const userAgent = window.navigator.userAgent.toLowerCase();
+  return /iphone|ipad|ipod/.test(userAgent);
+}
+
+// Detecta se já está instalado (Modo Standalone)
+const isInStandaloneMode = () => ('standalone' in window.navigator) && (window.navigator.standalone);
+
+// Se for iOS e NÃO estiver instalado, mostra o aviso
+if (isIos() && !isInStandaloneMode()) {
+  document.getElementById('ios-notice').style.display = 'block';
+}>
 </body>
 </html>
